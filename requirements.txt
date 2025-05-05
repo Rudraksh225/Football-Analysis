@@ -1,0 +1,8 @@
+ultralytics
+ipykernel
+python-dotenv
+opencv-python
+supervision
+numpy
+scikit-learn
+pandas
