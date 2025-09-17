@@ -1,2 +1,6 @@
 /.vscode
 *.env
+venv/
+test/
+models/
+output_videos/

@@ -10,7 +10,7 @@ from speed_and_distance_estimator import SpeedAndDistance_Estimator
 
 def main():
     # Read Video
-    video_frames = read_video(r"videos\DFL Bundesliga Data Shootout\test\test (14).mp4")
+    video_frames = read_video(r"test\test (19).mp4")
 
     # Initicalize Tracker
     tracker = Tracker("models/best.pt")
@@ -20,7 +20,7 @@ def main():
                                        stub_path = 'stubs/track_stubs.pkl')
     
     # Get object position
-    tracker.add_position_to_track(tracks)
+    tracker.add_position_to_tracks(tracks)
     
     # Camera Movement Estimator
     camera_movement_estimator = CameraMovementEstimator(video_frames[0]) 
@@ -35,11 +35,11 @@ def main():
     view_transformer.add_transformed_position_to_track(tracks) 
 
     # Interpolate ball position
-    tracks["ball"] = tracker.interpolate_ball_posisiton(tracks["ball"])
+    tracks["ball"] = tracker.interpolate_ball_positions(tracks["ball"])
 
     # Speed and distance estimator
     speed_and_distance_estimator = SpeedAndDistance_Estimator()
-    speed_and_distance_estimator.add_speed_and_distance_to_trcaks(tracks)
+    speed_and_distance_estimator.add_speed_and_distance_to_tracks(tracks)
     
     # Assign player teams
     team_assigner = TeamAssigner()

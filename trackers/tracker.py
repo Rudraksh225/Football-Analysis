@@ -13,7 +13,7 @@ class Tracker:
         self.model = YOLO(model_path)
         self.tracker = sv.ByteTrack()
 
-    def add_position_to_track(self, tracks):
+    def add_position_to_tracks(self, tracks):
         for object, object_tracks in tracks.items():
             for frame_num, track in enumerate(object_tracks):
                 for track_id, track_info in track.items():
@@ -24,7 +24,7 @@ class Tracker:
                         position = get_foot_position(bbox)
                     tracks[object][frame_num][track_id]['position'] = position
 
-    def interpolate_ball_posisiton(self, ball_positions):
+    def interpolate_ball_positions(self, ball_positions):
         ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
         df_ball_positions = pd.DataFrame(ball_positions, columns=['x1', 'y1', 'x2', 'y2'])
 
@@ -154,7 +154,7 @@ class Tracker:
         return frame
     
     def draw_triangle(self, frame, bbox, color):
-        y = int(bbox[1])
+        y = int(bbox[1])    
         x , _ = get_center_of_bbox(bbox)
 
         triangle_points = np.array([
@@ -211,7 +211,7 @@ class Tracker:
                 frame = self.draw_ellipse(frame, referee["bbox"], (0,255,255))
 
             # Draw triangle on ball
-            for _, ball in ball_dict.items():
+            for track_id, ball in ball_dict.items():
                 frame = self.draw_triangle(frame, ball["bbox"], (0, 255, 0))
 
             # Draw team ball control

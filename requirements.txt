@@ -6,3 +6,4 @@ supervision
 numpy
 scikit-learn
 pandas
+filterpy
