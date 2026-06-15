@@ -24,18 +24,34 @@ class Tracker:
                         position = get_foot_position(bbox)
                     tracks[object][frame_num][track_id]['position'] = position
 
+    # def interpolate_ball_positions(self, ball_positions):
+    #     ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
+    #     df_ball_positions = pd.DataFrame(ball_positions, columns=['x1', 'y1', 'x2', 'y2'])
+
+    #     # Interpolate missing values
+    #     df_ball_positions = df_ball_positions.interpolate(limit=3, limit_direction='both')
+    #     df_ball_positions = df_ball_positions.ffill()
+    #     df_ball_positions = df_ball_positions.bfill()
+
+    #     ball_positions = [{1: {"bbox":x}} for x in df_ball_positions.to_numpy().tolist()]
+
+    #     return ball_positions
+
     def interpolate_ball_positions(self, ball_positions):
-        ball_positions = [x.get(1,{}).get('bbox',[]) for x in ball_positions]
-        df_ball_positions = pd.DataFrame(ball_positions, columns=['x1', 'y1', 'x2', 'y2'])
-
-        # Interpolate missing values
-        df_ball_positions = df_ball_positions.interpolate(limit=3, limit_direction='both')
-        df_ball_positions = df_ball_positions.ffill()
-        df_ball_positions = df_ball_positions.bfill()
-
-        ball_positions = [{1: {"bbox":x}} for x in df_ball_positions.to_numpy().tolist()]
-
-        return ball_positions
+        detected = [1 in frame and bool(frame[1].get("bbox")) for frame in ball_positions]
+    
+        ball_bboxes = [x.get(1, {}).get('bbox', []) for x in ball_positions]
+        df = pd.DataFrame(ball_bboxes, columns=['x1', 'y1', 'x2', 'y2'])
+    
+        df = df.interpolate(limit=3, limit_direction='both')
+        df = df.ffill().bfill()
+    
+        return [{
+            1: {
+                "bbox": bbox,
+                "detected": detected[i]
+            }
+        } for i, bbox in enumerate(df.to_numpy().tolist())]
 
     def detect_frames(self, frames):
         batch_size = 20
@@ -212,7 +228,9 @@ class Tracker:
 
             # Draw triangle on ball
             for track_id, ball in ball_dict.items():
-                frame = self.draw_triangle(frame, ball["bbox"], (0, 255, 0))
+                # frame = self.draw_triangle(frame, ball["bbox"], (0, 255, 0))
+                if ball.get("detected", False):
+                    frame = self.draw_triangle(frame, ball["bbox"], (0, 255, 0))
 
             # Draw team ball control
             frame = self.draw_team_ball_control(frame, frame_num, team_ball_control)

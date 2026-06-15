@@ -10,10 +10,10 @@ from speed_and_distance_estimator import SpeedAndDistance_Estimator
 
 def main():
     # Read Video
-    video_frames = read_video(r"test\test (19).mp4")
+    video_frames = read_video(r"test\test (27).mp4") 
 
     # Initicalize Tracker
-    tracker = Tracker("models/best.pt")
+    tracker = Tracker("models/best_2.pt")
 
     tracks = tracker.get_object_tracks(video_frames, 
                                        read_from_stub = True,
@@ -67,7 +67,11 @@ def main():
             tracks['players'][frame_num][assigned_player]['has_ball'] = True
             team_ball_control.append(tracks['players'][frame_num][assigned_player]['team'])
         else:
-            team_ball_control.append(team_ball_control[-1])
+            # team_ball_control.append(team_ball_control[-1])
+            if team_ball_control:
+                team_ball_control.append(team_ball_control[-1])
+            else:
+                team_ball_control.append(0)
 
     team_ball_control = np.array(team_ball_control)
 
