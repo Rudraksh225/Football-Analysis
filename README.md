@@ -9,7 +9,7 @@
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green?style=flat-square&logo=opencv)](https://opencv.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 
-<img src="output_videos/screenshot_1.png" alt="Project Output Preview" width="85%"/>
+<img src="files\screenshot_1.png" alt="Project Output Preview" width="85%"/>
 
 </div>
 
